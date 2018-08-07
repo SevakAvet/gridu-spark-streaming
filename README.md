@@ -6,7 +6,7 @@
 3) Spark Streaming for processing
 4) Redis as lookup service and bots registry
 
-###Flume JSON filter
+### Flume JSON filter
 
 This is a flume event interceptor, that cleans up incoming json string and removes unnecessary symbols.
 
