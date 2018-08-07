@@ -14,6 +14,7 @@ This is a flume event interceptor, that cleans up incoming json string and remov
 1) Build the project:
 
 ```mvn clean package```
+
 2) Copy jar file to container to ```/opt/flume/lib``` directory:
 
 ```
