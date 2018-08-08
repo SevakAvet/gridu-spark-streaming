@@ -4,3 +4,7 @@
 flume-json-filter/target
 spark-streaming-kafka/project/target
 spark-streaming-kafka/target
+spark-streaming-kafka/src/main/resources/full-stack/kafka1/
+spark-streaming-kafka/src/main/resources/full-stack/logs/
+spark-streaming-kafka/src/main/resources/full-stack/redis/
+spark-streaming-kafka/src/main/resources/full-stack/zoo1/

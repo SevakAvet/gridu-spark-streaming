@@ -31,7 +31,7 @@ object BotDetectorV1 {
     val watermark: Int = config.getDuration("watermark", TimeUnit.SECONDS).toInt
   }
 
-  case class LogEvent(unix_time: java.sql.Timestamp, category_id: Long, ip: String, `type`: String)
+  case class LogEvent(unix_time: Long, category_id: Long, ip: String, `type`: String)
 
   case class EventAggregate(ip: String, eventRate: Long, clickRate: Long, viewRate: Long, categories: Set[Long]) {
     override def toString: String = s"ip: $ip, event rate: $eventRate, clickRate: $clickRate, viewRate: $viewRate, categories: ${categories.size}"

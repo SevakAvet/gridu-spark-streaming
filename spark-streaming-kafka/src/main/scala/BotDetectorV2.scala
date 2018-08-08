@@ -36,7 +36,7 @@ object BotDetectorV2 {
   def or(predicates: Seq[EventAggregate => Boolean])(eventAggregator: EventAggregate): Boolean =
     predicates.exists(predicate => predicate(eventAggregator))
 
-  object RedisConnection extends Serializable {
+  object RedisConnection {
     lazy val pool: RedisClientPool = new RedisClientPool(Config.redisHost, Config.redisPort)
   }
 
