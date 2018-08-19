@@ -96,7 +96,7 @@ object BotDetectorV2 {
         override def process(value: EventAggregate): Unit = {
           RedisConnection.pool.withClient{
             client => {
-              client.set(s"stat_${value.ip}", value.toString, onlyIfExists = false, com.redis.Seconds(Config.window))
+              client.set(s"stat_${value.ip}", value.toString, onlyIfExists = false, com.redis.Seconds(Config.statisticsTtl))
             }
           }
         }

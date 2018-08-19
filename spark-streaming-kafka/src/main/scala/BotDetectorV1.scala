@@ -19,6 +19,7 @@ object BotDetectorV1 {
     val redisHost: String = config.getString("redis.host")
     val redisPort: Int = config.getInt("redis.port")
     val redisTtl: Int = config.getDuration("redis.ttl", TimeUnit.SECONDS).toInt
+    val statisticsTtl: Int = config.getDuration("statisticsTtl", TimeUnit.SECONDS).toInt
     val kafkaHost: String = config.getString("kafka.host")
     val kafkaGroupId: String = config.getString("kafka.group-id")
     val kafkaTopic: String = config.getString("kafka.topic")
@@ -124,7 +125,7 @@ object BotDetectorV1 {
     stream
       .map(x => x._2.toString)
       .foreachRDD(rdd => {
-        spark.sparkContext.toRedisSET(rdd, "statistics", Config.window)
+        spark.sparkContext.toRedisSET(rdd, "statistics", Config.statisticsTtl)
       })
 
     // identify bots by rules and put them into redis 'bots' set
