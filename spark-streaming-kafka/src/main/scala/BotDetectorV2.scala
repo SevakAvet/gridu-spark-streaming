@@ -1,6 +1,6 @@
 import java.text.SimpleDateFormat
 
-import BotDetectorV1.Config
+import BotDetectorV1.{Config, EventAggregate, botRules}
 import com.redis.RedisClientPool
 import net.liftweb.json._
 import org.apache.spark.sql.functions._
@@ -27,10 +27,6 @@ object BotDetectorV2 {
 
   case class EventAggregateWithTimestamp(unix_time: java.sql.Timestamp, ip: String, eventRate: Long, clickRate: Long, viewRate: Long, category_id: Long) {
     override def toString: String = s"ip: $ip, event rate: $eventRate, clickRate: $clickRate, viewRate: $viewRate, categories: $category_id"
-  }
-
-  case class EventAggregate(ip: String, eventRate: Long, clickRate: Long, viewRate: Long, categories: Set[Long]) {
-    override def toString: String = s"ip: $ip, event rate: $eventRate, clickRate: $clickRate, viewRate: $viewRate, categories: ${categories.size}"
   }
 
   def or(predicates: Seq[EventAggregate => Boolean])(eventAggregator: EventAggregate): Boolean =
@@ -72,12 +68,6 @@ object BotDetectorV2 {
       .select("parsed_json.*")
       .as[LogEvent]
       .map(x => buildEventAggregate(x))
-
-    val botRules = Array[EventAggregate => Boolean](
-      x => x.eventRate > Config.eventRate,
-      x => x.viewRate == 0 || x.clickRate / x.viewRate > Config.clickViewRate,
-      x => x.categories.size > Config.categoriesRate
-    )
 
     val stream = kafkaStream
       .withWatermark("unix_time", s"${Config.watermark} seconds")

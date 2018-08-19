@@ -70,6 +70,12 @@ object BotDetectorV1 {
     }
   }
 
+  val botRules: Array[EventAggregate => Boolean] = Array[EventAggregate => Boolean](
+    x => x.eventRate > Config.eventRate,
+    x => x.viewRate == 0 || x.clickRate / x.viewRate > Config.clickViewRate,
+    x => x.categories.size > Config.categoriesRate
+  )
+
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
       .appName("spark")
@@ -96,12 +102,6 @@ object BotDetectorV1 {
       streamingContext,
       PreferConsistent,
       Subscribe[String, String](topics, kafkaParams)
-    )
-
-    val botRules = Array[EventAggregate => Boolean](
-      x => x.eventRate > Config.eventRate,
-      x => x.viewRate == 0 || x.clickRate / x.viewRate > Config.clickViewRate,
-      x => x.categories.size > Config.categoriesRate
     )
 
     var offsetRanges = Array[OffsetRange]()
